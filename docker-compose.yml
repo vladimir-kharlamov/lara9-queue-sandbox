@@ -60,6 +60,22 @@ services:
         networks:
             - sail
 
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: tools_php-phpmyadmin
+        restart: unless-stopped
+        environment:
+            - PMA_ARBITRARY=1
+            - UPLOAD_LIMIT=1024M
+            - MEMORY_LIMIT=1024M
+            - MAX_EXECUTION_TIME=300
+        ports:
+            - 8000:80
+        depends_on:
+            - mysql
+        networks:
+            - sail
+
 networks:
     sail:
         driver: bridge

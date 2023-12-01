@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,11 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+
+Artisan::command('track:hit_wrap', function () {
+    $this->info('Вызов пользовательской команды');
+    Artisan::call('track:hit');
+});
+
+//Route::post('/tracking/{tracker_public_id}', [\App\Http\Controllers\TrackingController::class, 'track']);
