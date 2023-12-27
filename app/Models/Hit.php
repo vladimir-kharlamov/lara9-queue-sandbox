@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Hit extends Model
 {
     use HasFactory;
+
+//    protected $table = 'hit';
+    protected $fillable = [
+        'url',
+        'tracker_id'
+    ];
+//    public $timestamps = false;
 }

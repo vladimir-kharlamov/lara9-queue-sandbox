@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Tracker;
 use Faker\Provider\Uuid;
 use Illuminate\Console\Command;
 
@@ -32,17 +33,24 @@ class TrackByHit extends Command
      */
     public function handle()
     {
-//        $trackerPublicId = $this->argument('tracker_public_id');
-        $trackerPublicId = Uuid::uuid();
-//        dd($trackerPublicId);
-        $url = URL::to('/') . "/tracking/{$trackerPublicId}";
-        dd($url);
+//    Tracker: у каждого сайта будет свой уникальный трекер.
+//    Сейчас нам просто нужно убедиться, что ID трекера является валидным
+//    (то есть существует в базе данных) и уникальным.
+//    Hit: каждый POST-запрос будет сохранен как «Hit»
 
+        // Get random site_id from 10 faked rows
+        $randomPublicId = Tracker::inRandomOrder()->first()->only('public_id');
+        $url = URL::to('/') . "/api/tracking";
         $response = Http::post($url, [
-                'url' => 'some_url' . $trackerPublicId,
-            ]);
-
-        $responseData = $response->json();
-        dd($responseData);
+                'url' => 'some_url/' . $randomPublicId['public_id'],
+                'public_id' => $randomPublicId['public_id'],
+        ]);
+        if ($response->status() === 200) {
+            $this->info('POST request sent successfully');
+            dd($response->body(), $response->object(), $response->json());
+        } else {
+            $this->error('Error sending POST request');
+            dd($response->status(),$response->json());
+        }
     }
 }

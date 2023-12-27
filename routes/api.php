@@ -17,5 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/tracking/{tracker_public_id}', [\App\Http\Controllers\TrackingController::class, 'track']);
-Route::get('/tracking/{tracker_public_id}', [\App\Http\Controllers\TrackingController::class, 'track']);
+/*Route::post('/tracking/', function (Request $request) {
+    $res = \App\Jobs\TrackHitJob::dispatch($request);
+    return response()->json([$res, $request->get('url')]);
+//    return response()->json(['message' => 'POST request received']);
+});*/
+
+Route::post('/tracking/', [\App\Http\Controllers\TrackingController::class, 'track']);
+//Route::get('/tracking/{tracker_public_id}', [\App\Http\Controllers\TrackingController::class, 'track']);

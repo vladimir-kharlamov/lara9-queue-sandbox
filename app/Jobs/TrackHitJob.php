@@ -17,24 +17,28 @@ class TrackHitJob implements ShouldQueue
 
     private $trackerPublicID;
     private $url;
-    public function __construct($trackerPublicID, Request $request)
+    public function __construct(Request $request)
     {
-        $this->trackerPublicID = $trackerPublicID;
+        $this->trackerPublicID = $request->get('public_id');
         $this->url = $request->get('url');
-        dd($trackerPublicID, $request);
     }
     public function handle()
     {
-        throw new \Exception("Error Processing the job", 1);
-        dd(2);
-        $tracker = Tracker::query()->where('public_id', $this->trackerPublicID)->first();
+        // To check failed_jobs table for exist fails
+        //throw new \Exception("Error Processing the job", 1);
+
+       $tracker = Tracker::query()->where('public_id', $this->trackerPublicID)->first();
+
         if ($tracker) {
             $hit = Hit::query()->create(['tracker_id' => $tracker->id, 'url' => $this->url]);
-            $previousHit = Hit::query()->where('tracker_id', $tracker->id)->orderBy('id', 'desc')->skip(1)->first();
+            $previousHit = Hit::query()->where('tracker_id', $tracker->id)
+                ->orderBy('id', 'desc')
+                ->skip(1)
+                ->first();
             if ($previousHit) {
                 $previousHit->seconds = $hit->created_at->diffInSeconds($previousHit->created_at);
                 $previousHit->save();
-                return $previousHit->seconds;
+                return $previousHit->seconds; /** @todo add field */
             }
             return 0;
         }

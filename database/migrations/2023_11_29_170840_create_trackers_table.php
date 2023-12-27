@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('hit', function (Blueprint $table) {
+        Schema::create('trackers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('tracker_id');
-            $table->foreign('tracker_id')->references('id')->on('tracker');
-            $table->string('url');
+            $table->string('public_id');
             $table->timestamp('created_at');
+            $table->timestamp('updated_at');
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hit');
+        Schema::dropIfExists('trackers');
     }
 };
