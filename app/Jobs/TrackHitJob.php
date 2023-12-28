@@ -36,9 +36,10 @@ class TrackHitJob implements ShouldQueue
                 ->skip(1)
                 ->first();
             if ($previousHit) {
+                /** @var $seconds diff from current hit and prev save in previouse hit */
                 $previousHit->seconds = $hit->created_at->diffInSeconds($previousHit->created_at);
                 $previousHit->save();
-                return $previousHit->seconds; /** @todo add field */
+                return $previousHit->seconds;
             }
             return 0;
         }
